@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+        <meta content="utf-8" http-equiv="encoding" />
+        <title>NS Wandelingen op Google Maps</title>
+        <style type="text/css">
+            #map {
+                width: 100vw;
+                height: 100vh;
+            }
+        </style>
+        <script async defer src="gpxviewer.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <div id="map"></div>
+
+        <script type="text/javascript">
+            async function initMap() {
+                const netherlands = { lat: 52.208, lng: 5.525 };
+                const map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 8,
+                    center: netherlands
+                });
+
+                const data = await (await fetch('129-de-vuursche.gpx')).text();
+                console.log({ data });
+
+				var domParser = new DOMParser();
+				// Use it to turn your xmlString into an XMLDocument
+				var xmlDoc = domParser.parseFromString(data, "application/xml");
+
+				const parser = new GPXParser(xmlDoc, map);
+				window.parser = parser;
+
+				parser.setTrackColour('#0289d1'); // Set the track line colour
+                // parser.setTrackWidth(5); // Set the track line width
+                // parser.setMinTrackPointDelta(0.001); // Set the minimum distance between track points
+                parser.addTrackpointsToMap(); // Add the trackpoints
+            }
+
+            // var src = 'de-vuursche.kmz';
+            // var kmlLayer = new google.maps.KmlLayer(src, {
+            //     suppressInfoWindows: true,
+            //     preserveViewport: false,
+            //     map: map
+            // });
+        </script>
+
+        <script
+            async
+            defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArjJhnLjfxixmOh5302H7SoINPm4Xhmjk&callback=initMap"
+            type="text/javascript"
+        ></script>
+    </body>
+</html>
